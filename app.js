@@ -1,49 +1,47 @@
 const fs = require('fs');
 const os = require('os');
 const notes = require('./notes.js');
-const {age, sign, dlnumber } = notes;
 const _ = require('lodash');
 const yargs = require('yargs');
 
-const argv = yargs.argv;
+const argv = yargs
+    .command('add', 'Adds a note', {
+      title: {
+          describe: 'Title of note',
+          demand: true
+      }  
+    })
+    .help()
+    .argv;
 let command = argv._[0];
 
-console.log('Starting app');
+ console.log('Starting app');
 
-if(command === 'add') {
-    notes.addNote(argv.title, argv.body);
-} else if(command === 'remove') {
-    notes.deleteNote(argv.title);
-}else if ( command === 'list') {
-    notes.getAll();
-} else if (command === 'read'){
-    notes.getNote(argv.title);
-}else {
+if ( command === 'add') {
+   let note = notes.addNote(argv.title, argv.body); 
+   if (note) {
+       console.log('Note Created');
+       notes.logNote(note); 
+   } else {
+       console.log('Note title taken');
+   }
+} else if ( command === 'list') {
+    let allNotes = notes.getAll();
+    console.log(`Printing ${allNotes.length} note(s)`);
+    allNotes.forEach(note => notes.logNote(note));
+} else if ( command === 'remove') {
+    let noteRemoved = notes.removeNote(argv.title);
+    let message = noteRemoved ? 'Note was removed' : 'Note not found';
+} else if ( command === 'read') {
+   let note = notes.getNote(argv.title);
+   if (note) {
+       console.log('Note Found');
+       notes.logNote(note);
+   } else {
+       console.log('Note not found');
+   }
+} else {
     console.log('Command not found');
 }
 
-console.log('Process', process.argv);
 console.log('Yargs', argv);
-
-// let filteredArray = _.uniq(['Kenan', 1, 'Kenan', 1, 2, 3, 4]);
-// console.log(filteredArray);
-
-// console.log(_.isString(true));
-// console.log(_.isString('Mike'));
-
-// let res = notes.addNote();
-// console.log(res);
-
-// let sum = notes.add(16, 12);
-// console.log(sum);
-
-// let user = os.userInfo();
-// let { username } = user;
-
-
-// // console.log(module.exports);
-//  fs.appendFile('greetings.txt', `Hello ${username}! You are ${notes.age} years old, and your sign is ${notes.sign}.`, function(err) {
-//      if(err) {
-//          console.log('Unable to write to file');
-//      }
-//  });

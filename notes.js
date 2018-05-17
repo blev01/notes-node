@@ -21,7 +21,7 @@ let addNote = function (title, body) {
         title,
         body
     };    
-   
+ debugger;  
     let duplicateNotes = notes.filter((note) => note.title === title);
     if ( duplicateNotes.length === 0) {
         notes.push(note);
@@ -29,18 +29,39 @@ let addNote = function (title, body) {
     }
     
 }
-let getAll = function () {
-    console.log('Getting all the notes');
+
+let removeNote = ( title ) => {
+    let notes = fetchNotes();
+    //fetch notes
+    let filteredNotes = notes.filter((note) => note.title !== title);
+    //filter notes, remove the one with the title rgument
+    saveNotes(filteredNotes);
+    //save the new notes array
 }
-let getNote = function (title) {
+let getAll = function () {
+    return fetchNotes();
+    console.log(`Printing ${allNotes.length} notes(s)`);
+    allNotes.forEach(note => notes.logNote(note));
+}
+let getNote = (title) => {
     console.log('Getting note:', title);
+    let notes = fetchNotes();
+    let filteredNotes = notes.filter((note) => note.title === title);
+    return filteredNotes[0];
 }
 let deleteNote = function () {
     console.log('Deleting note:', title);
+}
+
+let logNote = (note) => {
+    console.log('---');
+    console.log(`Title: ${note.title}`);
+    console.log(`Body: ${note.body}`);
 }
 module.exports = {
     addNote,
     getAll,
     getNote,
-    deleteNote: deleteNote
+    removeNote,
+    logNote
 }
